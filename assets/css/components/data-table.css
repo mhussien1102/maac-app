@@ -1,0 +1,74 @@
+/* ==========================================================================
+   Data table (files list, subscriptions list)
+   --------------------------------------------------------------------------
+   .table-card     rounded bordered wrapper (scrolls horizontally on mobile)
+   .data-table     the <table>; column widths come from <colgroup>
+   ========================================================================== */
+
+.table-card {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+}
+
+.data-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.data-table th,
+.data-table td {
+  padding-inline: 18px;
+  text-align: start;
+  vertical-align: middle;
+}
+
+.data-table thead th {
+  height: var(--head-h, 44px);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.data-table {
+  --row-h: 57px;                       /* row height, including its 1px separator */
+}
+
+.data-table tbody td {
+  height: var(--row-h);
+  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--text-md);
+  color: var(--text);
+}
+
+.data-table tbody tr:last-child td {
+  height: calc(var(--row-h) - 1px);     /* the card border replaces the last separator */
+  border-bottom: 0;
+}
+
+.data-table tbody tr {
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.data-table tbody tr:hover {
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+}
+
+.data-table__strong {
+  font-weight: 700;
+}
+
+.data-table__empty {
+  padding: 32px 18px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .data-table {
+    min-width: 640px;
+  }
+}

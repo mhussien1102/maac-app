@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light" data-auth="required" data-area="admin">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>الاشتراكات — لوحة الأدمن — MAAC</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+
+  <script src="../assets/js/boot.js"></script>
+
+  <link rel="preload" href="../assets/fonts/amiri-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+
+<body class="page-subscriptions">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="القائمة الجانبية"></aside>
+
+    <main class="main" id="main">
+      <div class="page page--lg">
+        <header class="page__header">
+          <h1 class="display display--page">الاشتراكات</h1>
+          <p class="lead page__subtitle">المشتركين المسجّلين في التطبيق، اللي دفعوا، واللي خلصت اشتراكاتهم.</p>
+        </header>
+
+        <!-- Summary cards: rendered by subscriptions.page.js -->
+        <section class="stat-grid" id="stats" aria-label="ملخص الاشتراكات"></section>
+
+        <!-- Filters -->
+        <div class="tabs subs__tabs" id="tabs" role="tablist" aria-label="تصفية الاشتراكات"></div>
+
+        <!-- Table -->
+        <section class="table-card subs__table" aria-label="قائمة الاشتراكات">
+          <table class="data-table subs-table">
+            <colgroup>
+              <col><col><col><col><col>
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">المشترك</th>
+                <th scope="col">الباقة</th>
+                <th scope="col">الحالة</th>
+                <th scope="col">تاريخ البدء</th>
+                <th scope="col">تاريخ الانتهاء</th>
+              </tr>
+            </thead>
+            <tbody id="subs-body"></tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="../assets/js/pages/subscriptions.page.js"></script>
+</body>
+</html>

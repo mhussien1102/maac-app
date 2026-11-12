@@ -1,0 +1,177 @@
+/* ==========================================================================
+   Design tokens
+   --------------------------------------------------------------------------
+   1. Theme-independent tokens (type, radius, layout, motion)
+   2. Light theme  (default)
+   3. Dark theme   ([data-theme="dark"] on <html>)
+
+   Components never use raw colors — they only read the semantic tokens
+   below, which is what makes switching themes a one-attribute change.
+   ========================================================================== */
+
+:root {
+  /* ---- Brand palette (raw values) ---- */
+  --navy-600: #0b3a6e;
+  --gold-500: #d4a93f;
+
+  /* ---- Typography ---- */
+  --font-sans: "IBM Plex Sans Arabic", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+  --font-display: "Amiri", "Noto Naskh Arabic", "Traditional Arabic", "Times New Roman", serif;
+
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.8125rem;   /* 13px */
+  --text-base: 0.875rem;  /* 14px */
+  --text-md: 0.9375rem;   /* 15px */
+  --text-lg: 1rem;        /* 16px */
+  --text-chat: 1.0625rem; /* 17px — chat text, composer */
+  --text-xl: 1.125rem;    /* 18px */
+  --text-2xl: 1.25rem;    /* 20px */
+
+  /* ---- Radius ---- */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-2xl: 18px;
+  --radius-3xl: 24px;
+  --radius-full: 999px;
+
+  /* ---- Layout ---- */
+  --sidebar-w: 288px;
+  --header-h: 60px;
+  --chat-w: 780px;       /* conversation column */
+  --home-w: 760px;       /* composer on the home screen */
+  --page-w-md: 900px;    /* upload page */
+  --page-w-lg: 1000px;   /* subscriptions page */
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 180ms;
+
+  /* ---- Z-index scale ---- */
+  --z-sidebar: 40;
+  --z-overlay: 30;
+  --z-toast: 100;
+}
+
+/* ==========================================================================
+   Light theme (default)
+   ========================================================================== */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces */
+  --bg: #faf9f5;
+  --bg-sidebar: #f0eee6;
+  --surface: #ffffff;
+  --active: #e3e0d3;                 /* active nav item / history item */
+
+  /* Lines */
+  --border: #e3e0d6;
+  --border-soft: #efede5;            /* row separators inside tables */
+  --border-dashed: #cfcabb;          /* dropzone */
+
+  /* Text */
+  --text: #141413;
+  --text-2: #3d3d3a;
+  --text-muted: #5e5d59;
+  --text-placeholder: #80807f;
+
+  /* Primary (navy in light, gold in dark) */
+  --primary: #0b3a6e;
+  --on-primary: #ffffff;
+  --primary-soft: #e6edf6;
+  --primary-ink: #0b3a6e;            /* text/icons that use the primary hue */
+
+  /* Accent (gold) */
+  --accent: #d4a93f;
+  --accent-ink: #7a6212;
+  --accent-border: #8d691f;
+
+  /* Chat */
+  --bubble-user: #e9f0f8;
+  --bubble-user-border: #dbe5f1;
+
+  /* Theme switch */
+  --toggle-track: #e3e0d3;
+  --toggle-thumb: #ffffff;
+  --toggle-thumb-ink: #8d691f;
+  --toggle-idle-ink: #6f6d66;
+
+  /* Elevation */
+  --shadow-composer: 0 4px 24px rgba(20, 20, 19, 0.07);
+  --shadow-thumb: 0 1px 4px rgba(20, 20, 19, 0.2);
+  --shadow-toast: 0 8px 28px rgba(20, 20, 19, 0.18);
+
+  /* Status colors (bg / fg / progress-bar tint) */
+  --success-bg: #e3f1e7;  --success-fg: #1d5e34;  --success-bar: #bfe0c9;
+  --warning-bg: #fbf0d5;  --warning-fg: #6b4e0a;  --warning-bar: #f1dda6;
+  --danger-bg:  #f9e3e0;  --danger-fg:  #8a2e22;  --danger-bar:  #efc7c1;
+  --info-bg:    #e3ecf8;  --info-fg:    #1b4f9c;  --info-bar:    #c9d6e8;
+
+  --overlay: rgba(20, 20, 19, 0.4);
+
+  /* Brand panel (login screen) */
+  --panel-brand-bg: #0b3a6e;
+  --panel-brand-ink: #ffffff;
+  --panel-brand-muted: rgba(255, 255, 255, 0.74);
+  --panel-brand-line: rgba(255, 255, 255, 0.12);
+  --panel-brand-edge: transparent;
+}
+
+/* ==========================================================================
+   Dark theme
+   ========================================================================== */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0f131c;
+  --bg-sidebar: #0a0f15;
+  --surface: #151d2a;
+  --active: #1f2a3f;
+
+  --border: #27303f;
+  --border-soft: #1f2836;
+  --border-dashed: #34405a;
+
+  --text: #f3f1ec;
+  --text-2: #c9ced8;
+  --text-muted: #aeb4c0;
+  --text-placeholder: #8f95a1;
+
+  --primary: #d4a93f;
+  --on-primary: #0a0f15;
+  --primary-soft: #1f2a40;
+  --primary-ink: #e5bc63;
+
+  --accent: #d4a93f;
+  --accent-ink: #e5bc63;
+  --accent-border: #d4a93f;
+
+  --bubble-user: #1a2741;
+  --bubble-user-border: #272f42;
+
+  --toggle-track: #1f2a3f;
+  --toggle-thumb: #d4a93f;
+  --toggle-thumb-ink: #0a0f15;
+  --toggle-idle-ink: #9aa1ad;
+
+  --shadow-composer: 0 4px 24px rgba(0, 0, 0, 0.28);
+  --shadow-thumb: none;
+  --shadow-toast: 0 8px 28px rgba(0, 0, 0, 0.5);
+
+  --success-bg: rgba(63, 185, 110, 0.14);  --success-fg: #7fd6a0;  --success-bar: rgba(63, 185, 110, 0.32);
+  --warning-bg: rgba(212, 169, 63, 0.16);  --warning-fg: #e5bc63;  --warning-bar: rgba(212, 169, 63, 0.34);
+  --danger-bg:  rgba(228, 98, 78, 0.15);   --danger-fg:  #f4a193;  --danger-bar:  rgba(228, 98, 78, 0.34);
+  --info-bg:    rgba(86, 140, 232, 0.16);  --info-fg:    #93b8f4;  --info-bar:    rgba(86, 140, 232, 0.34);
+
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  --panel-brand-bg: #0a0f15;
+  --panel-brand-ink: #f3f1ec;
+  --panel-brand-muted: #aeb4c0;
+  --panel-brand-line: rgba(255, 255, 255, 0.08);
+  --panel-brand-edge: var(--border);
+}

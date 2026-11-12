@@ -1,0 +1,92 @@
+/* ==========================================================================
+   App shell — sidebar + main area
+   --------------------------------------------------------------------------
+   The page content is RTL, but (exactly like the design) the sidebar sits on
+   the physical LEFT. To get that we flip the direction to LTR on the shell
+   grid only, then restore RTL on its children.
+
+   Want the sidebar on the right instead? Delete the two `direction` lines
+   below (the grid will then follow the document direction).
+   ========================================================================== */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg);
+  direction: ltr;                       /* ← sidebar on the left */
+}
+
+.app-shell > * {
+  direction: rtl;                       /* ← content stays RTL */
+}
+
+.main {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+/* Mobile top bar (only visible on small screens) ------------------------- */
+.mobile-bar {
+  display: none;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding-inline: 16px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-bar__btn {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    color: var(--text-muted);
+  }
+
+  .mobile-bar__btn:hover {
+    background: var(--active);
+  }
+
+  .mobile-bar__title {
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--primary-ink);
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    background: var(--overlay);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .app-shell.is-sidebar-open .sidebar-overlay {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

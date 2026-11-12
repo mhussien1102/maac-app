@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Page: subscriptions (subscriptions.html)
+   ========================================================================== */
+
+.subs__tabs {
+  margin-top: 26px;
+}
+
+.subs__table {
+  margin-top: 26px;
+}
+
+/* Column widths (RTL: first column is on the right) */
+.subs-table {
+  --head-h: 45px;
+}
+
+.subs-table col:nth-child(1) { width: 20.5%; }
+.subs-table col:nth-child(2) { width: 12.5%; }
+.subs-table col:nth-child(3) { width: 23.8%; }
+.subs-table col:nth-child(4) { width: 21.6%; }
+.subs-table col:nth-child(5) { width: 21.6%; }
+
+.subs-table td.is-date {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Second line under the subscriber's name (company / e-mail) */
+.subs__meta {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.subs__tag {
+  display: inline-block;
+  margin-block: 3px 1px;
+  margin-inline-start: 8px;
+  padding: 1px 8px;
+  line-height: 1.5;
+  border-radius: var(--radius-full);
+  background: var(--active);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}

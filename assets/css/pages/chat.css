@@ -1,0 +1,82 @@
+/* ==========================================================================
+   Page: chat (chat.html) — a conversation
+   ========================================================================== */
+
+/* The chat page owns its scrolling: header on top, messages scroll, composer stays. */
+.main--chat {
+  overflow: hidden;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.chat__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex: none;
+  height: var(--header-h);
+  padding-inline: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.chat__title {
+  min-width: 0;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.chat__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 37px 32px 24px;
+}
+
+.chat__thread {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: min(var(--chat-w), 100%);
+  margin-inline: auto;
+}
+
+.chat__composer {
+  flex: none;
+  padding: 0 32px 28px;
+}
+
+.chat__composer-inner {
+  width: min(var(--chat-w), 100%);
+  margin-inline: auto;
+}
+
+.chat__not-found {
+  display: grid;
+  place-items: center;
+  gap: 16px;
+  height: 100%;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .chat__header,
+  .chat__composer {
+    padding-inline: 16px;
+  }
+
+  .chat__scroll {
+    padding-inline: 16px;
+  }
+}

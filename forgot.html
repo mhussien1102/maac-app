@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light" data-auth="guest">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MAAC — نسيت كلمة المرور</title>
+  <meta name="description" content="استرجع حسابك في MAAC بكود يوصلك على الإيميل.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+
+  <!-- Applies the saved theme + the route guard before first paint (must stay a classic script) -->
+  <script src="assets/js/boot.js"></script>
+
+  <link rel="preload" href="assets/fonts/amiri-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body class="page-auth">
+  <div class="auth">
+
+    <!-- ===== Form side ===== -->
+    <main class="auth__main" id="main">
+      <header class="auth__top">
+        <a class="auth__mark" href="login.html" aria-label="MAAC">
+          <span class="logo-mark" aria-hidden="true"><span data-icon="trending-up" data-size="22"></span></span>
+          <span class="auth__mark-name">MAAC</span>
+        </a>
+        <div class="theme-row" data-theme-row></div>
+      </header>
+
+      <section class="auth__card" id="auth-card" aria-labelledby="auth-title">
+        <div class="logo-mark" aria-hidden="true"><span data-icon="lock" data-size="32"></span></div>
+
+        <h1 class="display auth__title" id="auth-title">نسيت كلمة المرور؟</h1>
+        <p class="lead auth__lead">اكتب الإيميل بتاع حسابك وهنبعتلك كود من 6 أرقام عشان تختار كلمة مرور جديدة.</p>
+
+        <form class="auth__form" id="forgot-form" novalidate>
+          <div class="notice notice--danger" data-form-error role="alert" hidden>
+            <span data-icon="circle-alert" data-size="18"></span>
+            <span data-error-text></span>
+          </div>
+          <div class="field">
+            <label class="field__label" for="email">البريد الإلكتروني</label>
+            <div class="input">
+              <span class="input__icon" data-icon="mail" data-size="20"></span>
+              <input class="input__control input__control--ltr" id="email" name="email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false"
+                     placeholder="name@company.com" aria-describedby="email-error">
+            </div>
+            <p class="field__error" id="email-error" role="alert" hidden>
+              <span data-icon="circle-alert" data-size="14"></span><span data-error-text></span>
+            </p>
+          </div>
+
+          <button class="btn btn--primary btn--lg btn--block" type="submit">
+            <span class="is-spinning" data-icon="loader-circle" data-size="18" data-spinner hidden></span>
+            <span data-label>ابعتلي الكود</span>
+          </button>
+        </form>
+
+        <p class="auth__alt"><a class="auth__back" href="login.html"><span data-icon="arrow-right" data-size="16"></span>رجوع لتسجيل الدخول</a></p>
+      </section>
+    </main>
+
+    <!-- ===== Brand panel (decorative, hidden on small screens) — rendered by components/auth-brand.js ===== -->
+    <aside id="brand"></aside>
+
+  </div>
+
+  <script type="module" src="assets/js/pages/forgot.page.js"></script>
+</body>
+</html>

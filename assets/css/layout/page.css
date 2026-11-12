@@ -1,0 +1,31 @@
+/* ==========================================================================
+   Page containers — shared by upload / subscriptions pages
+   ========================================================================== */
+
+.page {
+  --page-w: var(--page-w-md);
+  inline-size: min(var(--page-w), 100% - 48px);
+  margin-inline: auto;
+  padding-block: 56px 64px;
+}
+
+.page--md { --page-w: var(--page-w-md); }
+.page--lg { --page-w: var(--page-w-lg); }
+
+.page__header {
+  margin-bottom: 24px;
+}
+
+.page__subtitle {
+  margin-top: 14px;
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding-block: 28px 48px;
+  }
+
+  .display--page {
+    font-size: 2rem;
+  }
+}

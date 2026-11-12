@@ -1,0 +1,53 @@
+/* ==========================================================================
+   Theme toggle (sun ⇄ moon switch)
+   --------------------------------------------------------------------------
+   The thumb slides according to <html data-theme="…">, so the switch is
+   always in sync with the theme, whoever changed it.
+   The control is always LTR: sun on the left, moon on the right.
+   ========================================================================== */
+
+.theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  width: 70px;
+  height: 36px;
+  padding-inline: 4px;
+  border-radius: var(--radius-full);
+  background: var(--toggle-track);
+  direction: ltr;
+}
+
+.theme-toggle__icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--toggle-idle-ink);
+  transition: color var(--dur) var(--ease);
+}
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--toggle-thumb);
+  box-shadow: var(--shadow-thumb);
+  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+
+:root[data-theme="light"] .theme-toggle__icon--sun,
+:root[data-theme="dark"] .theme-toggle__icon--moon {
+  color: var(--toggle-thumb-ink);
+}
+
+:root[data-theme="dark"] .theme-toggle__thumb {
+  transform: translateX(34px);
+}

@@ -1,0 +1,73 @@
+/* ==========================================================================
+   OTP boxes — one input per digit (assets/js/components/otp-input.js)
+   --------------------------------------------------------------------------
+   .otp.is-error    red boxes + shake      .otp.is-success   green boxes
+   ========================================================================== */
+
+.otp {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.otp__digit {
+  flex: 1;
+  min-width: 0;
+  max-width: 62px;
+  height: 64px;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  font-size: 1.625rem;                 /* 26px */
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  caret-color: var(--primary-ink);
+  transition:
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+}
+
+.otp__digit:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--text-muted) 45%, var(--border));
+}
+
+.otp__digit:focus,
+.otp__digit:focus-visible {
+  outline: none;
+  border-color: var(--primary-ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-ink) 16%, transparent);
+}
+
+/* a box that already holds a digit */
+.otp__digit.is-filled {
+  border-color: color-mix(in srgb, var(--primary-ink) 40%, var(--border));
+}
+
+.otp__digit:disabled {
+  opacity: 0.7;
+}
+
+.otp.is-error .otp__digit {
+  border-color: var(--danger-fg);
+  background: color-mix(in srgb, var(--danger-bg) 55%, var(--surface));
+  color: var(--danger-fg);
+}
+
+.otp.is-success .otp__digit {
+  border-color: var(--success-fg);
+  background: color-mix(in srgb, var(--success-bg) 55%, var(--surface));
+  color: var(--success-fg);
+}
+
+.otp.is-shaking {
+  animation: otp-shake 360ms var(--ease);
+}
+
+@keyframes otp-shake {
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}

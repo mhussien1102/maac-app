@@ -1,0 +1,39 @@
+/* ==========================================================================
+   Page: upload (upload.html) — add files to the dataset
+   ========================================================================== */
+
+.upload__dropzone {
+  margin-top: 26px;                    /* collapses with the header margin (24px) → 26px gap */
+}
+
+.upload__files {
+  margin-top: 28px;
+  overflow: hidden;
+}
+
+/* The "files" list reuses .data-table with its own row rhythm */
+.files-table {
+  --row-h: 59.5px;
+  --head-h: 43px;
+}
+
+/* Status badges are a touch roomier here (icon + label) */
+.files-table .badge {
+  padding-inline: 14px;
+}
+
+/* Last column (status) sits on the physical left, like the design */
+.files-table th:last-child,
+.files-table td:last-child {
+  text-align: end;
+}
+
+.files-table__name {
+  position: relative;
+  top: 1px;                           /* optical alignment with the type badge */
+  font-size: var(--text-md);
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Stat card (subscriptions summary)
+   --------------------------------------------------------------------------
+   Tone modifiers set --tone (number color) and --tone-bar (bar tint).
+   ========================================================================== */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  --tone: var(--primary-ink);
+  --tone-bar: var(--info-bar);
+
+  display: flex;
+  flex-direction: column;
+  height: 128px;
+  padding: 18px 20px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+}
+
+.stat-card--info    { --tone: var(--primary-ink); --tone-bar: var(--info-bar); }
+.stat-card--success { --tone: var(--success-fg);  --tone-bar: var(--success-bar); }
+.stat-card--warning { --tone: var(--warning-fg);  --tone-bar: var(--warning-bar); }
+.stat-card--danger  { --tone: var(--danger-fg);   --tone-bar: var(--danger-bar); }
+
+.stat-card__label {
+  font-size: 0.875rem;               /* 14px */
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+.stat-card__value {
+  margin-top: 10px;
+  font-size: 2.125rem;               /* 34px */
+  font-weight: 700;
+  line-height: 40px;
+  color: var(--tone);
+  font-variant-numeric: lining-nums;
+}
+
+.stat-card__bar {
+  margin-top: auto;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--tone-bar);
+}
+
+@media (max-width: 900px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

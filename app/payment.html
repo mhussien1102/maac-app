@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light" data-auth="required" data-area="user">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MAAC — الاشتراك والدفع</title>
+  <meta name="description" content="اختار باقتك وادفع اشتراك MAAC بكارت Visa.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+
+  <!-- Applies the saved theme + the route guard before first paint (must stay a classic script) -->
+  <script src="../assets/js/boot.js"></script>
+
+  <link rel="preload" href="../assets/fonts/amiri-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+
+<body class="page-payment">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="القائمة الجانبية"></aside>
+
+    <main class="main" id="main">
+      <div class="page page--lg pay">
+        <header class="page__header">
+          <h1 class="display display--page">الاشتراك والدفع</h1>
+          <p class="lead page__subtitle">اختار الباقة وادفع بكارت Visa عشان تفعّل اشتراكك.</p>
+        </header>
+
+        <!-- Subscription status (none / active / expired) — rendered by payment.page.js -->
+        <div id="status"></div>
+
+        <div class="pay__layout" id="pay-layout">
+          <!-- ===== Plan + card form ===== -->
+          <div class="pay__col">
+            <section class="card pay__section" aria-labelledby="plans-title">
+              <h2 class="card__title" id="plans-title">1. اختار الباقة</h2>
+              <div class="plan-grid" id="plans" role="radiogroup" aria-labelledby="plans-title"></div>
+            </section>
+
+            <section class="card pay__section" aria-labelledby="card-title">
+              <div class="pay__section-head">
+                <h2 class="card__title" id="card-title">2. بيانات الكارت</h2>
+                <span class="pay__network">Visa</span>
+              </div>
+
+              <form class="pay__form" id="pay-form" novalidate>
+                <div class="notice notice--danger" data-form-error role="alert" hidden>
+                  <span data-icon="circle-alert" data-size="18"></span>
+                  <span data-error-text></span>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="cardNumber">رقم الكارت</label>
+                  <div class="input">
+                    <span class="input__icon" data-icon="credit-card" data-size="20"></span>
+                    <input class="input__control input__control--ltr" id="cardNumber" name="cardNumber" type="text"
+                           inputmode="numeric" autocomplete="cc-number" maxlength="19" placeholder="1234 5678 9012 3456"
+                           aria-describedby="cardNumber-error">
+                  </div>
+                  <p class="field__error" id="cardNumber-error" role="alert" hidden>
+                    <span data-icon="circle-alert" data-size="14"></span><span data-error-text></span>
+                  </p>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="cardName">الاسم على الكارت</label>
+                  <div class="input">
+                    <span class="input__icon" data-icon="user" data-size="20"></span>
+                    <input class="input__control input__control--ltr input__control--upper" id="cardName" name="cardName" type="text"
+                           autocomplete="cc-name" autocapitalize="characters" spellcheck="false" placeholder="AHMED MAHMOUD"
+                           aria-describedby="cardName-error">
+                  </div>
+                  <p class="field__error" id="cardName-error" role="alert" hidden>
+                    <span data-icon="circle-alert" data-size="14"></span><span data-error-text></span>
+                  </p>
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label class="field__label" for="expiry">تاريخ الانتهاء</label>
+                    <div class="input">
+                      <span class="input__icon" data-icon="calendar" data-size="20"></span>
+                      <input class="input__control input__control--ltr" id="expiry" name="expiry" type="text"
+                             inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="MM/YY"
+                             aria-describedby="expiry-error">
+                    </div>
+                    <p class="field__error" id="expiry-error" role="alert" hidden>
+                      <span data-icon="circle-alert" data-size="14"></span><span data-error-text></span>
+                    </p>
+                  </div>
+
+                  <div class="field">
+                    <label class="field__label" for="cvv">كود الأمان CVV</label>
+                    <div class="input">
+                      <span class="input__icon" data-icon="lock" data-size="20"></span>
+                      <input class="input__control input__control--ltr" id="cvv" name="cvv" type="password"
+                             inputmode="numeric" autocomplete="cc-csc" maxlength="3" placeholder="•••"
+                             aria-describedby="cvv-error">
+                    </div>
+                    <p class="field__error" id="cvv-error" role="alert" hidden>
+                      <span data-icon="circle-alert" data-size="14"></span><span data-error-text></span>
+                    </p>
+                  </div>
+                </div>
+              </form>
+            </section>
+          </div>
+
+          <!-- ===== Card preview + order summary ===== -->
+          <aside class="pay__col pay__side" aria-label="ملخص الطلب">
+            <div id="card-preview"></div>
+
+            <section class="card pay__summary" aria-labelledby="summary-title">
+              <h2 class="card__title" id="summary-title">ملخص الطلب</h2>
+              <dl class="summary" id="summary"></dl>
+
+              <button class="btn btn--primary btn--lg btn--block" type="submit" form="pay-form" id="pay-button">
+                <span class="is-spinning" data-icon="loader-circle" data-size="18" data-spinner hidden></span>
+                <span data-icon="lock" data-size="18" data-lock></span>
+                <span data-label>ادفع الآن</span>
+              </button>
+              <p class="pay__fineprint">مفيش تجديد تلقائي — الاشتراك بيخلص في آخر المدة من غير ما يتخصم منك تاني.</p>
+            </section>
+
+            <!-- Demo helper — delete this block when a real payment gateway is connected -->
+            <div class="pay__demo">
+              <p><strong>تصميم تجريبي — مفيش أي خصم حقيقي.</strong></p>
+              <p dir="ltr" class="pay__demo-cards">4111 1111 1111 1111 → ناجح<br>4000 0000 0000 0002 → مرفوض</p>
+              <button type="button" class="btn btn--outline btn--sm" id="fill-card">استخدم كارت تجريبي</button>
+            </div>
+          </aside>
+        </div>
+
+        <!-- ===== Receipt (shown after a successful payment) ===== -->
+        <section id="receipt" class="card receipt" hidden aria-live="polite"></section>
+
+        <!-- ===== Payment history ===== -->
+        <section class="card pay__history" id="history" aria-labelledby="history-title" hidden>
+          <div class="card__head"><h2 class="card__title" id="history-title">سجل المدفوعات</h2></div>
+          <table class="data-table history-table">
+            <colgroup><col style="width: 22%"><col style="width: 14%"><col style="width: 18%"><col style="width: 16%"><col></colgroup>
+            <thead>
+              <tr><th>التاريخ</th><th>الباقة</th><th>المبلغ</th><th>الكارت</th><th>رقم العملية</th></tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="../assets/js/pages/payment.page.js"></script>
+</body>
+</html>

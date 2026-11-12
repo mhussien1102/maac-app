@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Composer — the message box (home + chat)
+   --------------------------------------------------------------------------
+   .composer           compact (chat page)
+   .composer--lg       taller version used on the home screen
+   Markup: assets/js/components/composer.js
+   ========================================================================== */
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-composer);
+  transition: border-color var(--dur) var(--ease);
+}
+
+.composer:focus-within {
+  border-color: color-mix(in srgb, var(--primary-ink) 45%, var(--border));
+}
+
+.composer__input {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  max-height: 220px;
+  padding: 0 3px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--text-chat);
+  line-height: 26px;
+  overflow-y: auto;
+}
+
+.composer__input::placeholder {
+  color: var(--text-placeholder);
+  opacity: 1;
+}
+
+.composer__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;      /* attach (start / right) — send (end / left) */
+}
+
+.composer--lg {
+  padding: 20px 18px 16px;
+}
+
+.composer--lg .composer__input {
+  min-height: 81px;
+  font-size: 1.125rem;                 /* 18px */
+}

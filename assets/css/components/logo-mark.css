@@ -1,0 +1,15 @@
+/* ==========================================================================
+   Logo mark — the navy tile with the gold trend arrow (home + login screens)
+   Markup: <div class="logo-mark"><svg …trending-up…></svg></div>
+   ========================================================================== */
+
+.logo-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xl);
+  background: var(--navy-600);
+  color: var(--gold-500);
+}

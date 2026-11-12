@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Buttons
+   --------------------------------------------------------------------------
+   .btn              base (44px tall)
+   .btn--primary     filled with the primary color (navy in light, gold in dark)
+   .btn--outline     bordered, transparent
+   .btn--sm          36px tall (message actions, export button)
+   .btn--block       full width
+   .btn--pill        fully rounded (source chip / suggestion chips)
+   .icon-btn         square 44px icon-only button
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding-inline: 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    filter var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.btn--primary:hover {
+  filter: brightness(1.08);
+}
+
+.btn--outline {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.btn--outline:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.btn--sm {
+  height: 36px;
+  padding-inline: 12px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+}
+
+.btn--lg {
+  height: 48px;
+  padding-inline: 24px;
+  font-size: var(--text-lg);
+}
+
+.btn:disabled {
+  opacity: 0.65;
+}
+
+.btn--block {
+  display: flex;
+  width: 100%;
+}
+
+.btn--pill {
+  border-radius: var(--radius-full);
+}
+
+/* Icon-only square buttons (attach / send / mobile menu ...) */
+.icon-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    filter var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.icon-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.icon-btn--primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.icon-btn--primary:hover {
+  filter: brightness(1.08);
+}
+
+.icon-btn--outline {
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.icon-btn--outline:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.icon-btn--ghost {
+  color: var(--text-muted);
+}
+
+.icon-btn--ghost:hover {
+  background: var(--active);
+  color: var(--text);
+}
+
+/* Suggestion chips on the home screen */
+.suggestion {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding-inline: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 0.90625rem;                /* 14.5px */
+  white-space: nowrap;
+  transition:
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.suggestion:hover {
+  border-color: var(--primary-ink);
+  color: var(--primary-ink);
+}
+
+.suggestion:active {
+  transform: translateY(1px);
+}

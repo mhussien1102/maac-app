@@ -1,0 +1,41 @@
+/* ==========================================================================
+   Page: home (index.html) — new conversation
+   ========================================================================== */
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.home__title {
+  margin-top: 24px;
+}
+
+.home__subtitle {
+  margin-top: 21px;
+}
+
+.home__composer {
+  width: min(var(--home-w), 100%);
+  margin-top: 26px;
+}
+
+.home__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(var(--home-w), 100%);
+  margin-top: 28px;
+}
+
+@media (max-width: 900px) {
+  .display--hero {
+    font-size: 2.125rem;
+  }
+}

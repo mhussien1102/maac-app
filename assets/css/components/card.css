@@ -1,0 +1,20 @@
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+}
+
+.card__head {
+  padding: 18px 18px 9px;
+}
+
+.card__title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--text);
+}

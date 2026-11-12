@@ -1,0 +1,211 @@
+/* ==========================================================================
+   Chat messages
+   --------------------------------------------------------------------------
+   .message--user        right-aligned bubble
+   .message--assistant   avatar + body (thinking pill, content blocks, actions)
+   Markup: assets/js/components/message.js
+   ========================================================================== */
+
+.message {
+  display: flex;
+}
+
+/* ---- User ------------------------------------------------------------- */
+.message--user {
+  justify-content: flex-start;           /* RTL start = right */
+}
+
+.message__bubble {
+  max-width: 85%;
+  padding: 15px 20px;
+  background: var(--bubble-user);
+  border: 1px solid var(--bubble-user-border);
+  border-radius: 20px;
+  font-size: var(--text-chat);
+  line-height: 26px;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/* ---- Assistant -------------------------------------------------------- */
+.message--assistant {
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.message__avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  background: var(--navy-600);
+  color: var(--gold-500);
+}
+
+.message__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* "Think before answering" pill + its collapsible panel */
+.thinking__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding-inline: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.thinking__toggle:hover {
+  color: var(--text);
+}
+
+.thinking__toggle .icon {
+  transition: transform var(--dur) var(--ease);
+}
+
+.thinking__toggle[aria-expanded="true"] .icon {
+  transform: rotate(180deg);
+}
+
+.thinking__panel {
+  margin-top: 10px;
+  padding: 12px 16px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-xl);
+  font-size: var(--text-sm);
+  line-height: 1.9;
+  color: var(--text-muted);
+}
+
+.thinking__panel li::before {
+  content: "•";
+  margin-inline-end: 8px;
+  color: var(--accent-ink);
+}
+
+/* Content */
+.message__content {
+  margin-top: 16px;
+  font-size: var(--text-chat);
+  line-height: 32px;
+  color: var(--text);
+}
+
+.message__content > * + * {
+  margin-top: 16px;
+}
+
+.message__content > .answer-table {
+  margin-top: 15px;
+}
+
+.message__text {
+  overflow-wrap: anywhere;
+}
+
+.message__list {
+  padding-inline-start: 22px;
+  list-style: disc;
+}
+
+.message__list li::marker {
+  color: var(--text-muted);
+}
+
+/* Small summary table inside an answer */
+.answer-table {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.answer-table__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 18px;
+  font-size: var(--text-md);
+  line-height: 21.67px;
+}
+
+.answer-table__row + .answer-table__row {
+  border-top: 1px solid var(--border);
+}
+
+.answer-table__label {
+  color: var(--text-muted);
+}
+
+.answer-table__value {
+  font-weight: 700;
+  color: var(--text);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.answer-table__value--highlight {
+  color: var(--accent-ink);
+}
+
+/* Action row (source, copy, export) */
+.message__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.message__actions .btn[data-state="done"] {
+  color: var(--success-fg);
+  border-color: var(--success-fg);
+}
+
+/* Gold "source" chip next to the actions */
+.source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding-inline: 13px;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-full);
+  color: var(--accent-ink);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Typing indicator */
+.typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+}
+
+.typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: typing 1.1s infinite ease-in-out;
+}
+
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typing {
+  0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}

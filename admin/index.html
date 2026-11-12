@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light" data-auth="required" data-area="admin">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MAAC — محادثة جديدة</title>
+  <meta name="description" content="مساعد المحاسبة والمراجعة: اسأل عن أي شيء في ملفاتك.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+
+  <!-- Applies the saved theme before first paint (must stay a classic script) -->
+  <script src="../assets/js/boot.js"></script>
+
+  <link rel="preload" href="../assets/fonts/amiri-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+
+<body class="page-home">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="القائمة الجانبية"></aside>
+
+    <main class="main" id="main">
+      <section class="home">
+        <div class="logo-mark" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
+        </div>
+
+        <h1 class="display display--hero home__title">كيف أقدر أساعدك النهاردة؟</h1>
+        <p class="lead home__subtitle">المساعد بيجاوب من الملفات اللي أضفتها للداتا سيت</p>
+
+        <div class="home__composer" id="composer"></div>
+
+        <div class="home__suggestions" id="suggestions" role="group" aria-label="أسئلة مقترحة">
+          <button type="button" class="suggestion">ما هي قيمة بند 601؟</button>
+          <button type="button" class="suggestion">لخّص ملف الإقرار الضريبي</button>
+          <button type="button" class="suggestion">قارن بين السنتين وفسّر التغيير</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="../assets/js/pages/home.page.js"></script>
+</body>
+</html>

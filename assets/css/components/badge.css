@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Badges
+   --------------------------------------------------------------------------
+   .badge            status pill (subscription / indexing status)
+   .badge--success | --warning | --danger | --info
+   .file-badge       file type tag (PDF / Word / Excel / Image)
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding-inline: 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.badge--success { background: var(--success-bg); color: var(--success-fg); }
+.badge--warning { background: var(--warning-bg); color: var(--warning-fg); }
+.badge--danger  { background: var(--danger-bg);  color: var(--danger-fg); }
+.badge--info    { background: var(--info-bg);    color: var(--info-fg); }
+
+/* ---- File type tag ---- */
+.file-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 28px;
+  padding-inline: 9px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.file-badge--pdf   { background: var(--danger-bg);  color: var(--danger-fg); }
+.file-badge--word  { background: var(--info-bg);    color: var(--info-fg); }
+.file-badge--excel { background: var(--success-bg); color: var(--success-fg); }
+.file-badge--image { background: var(--warning-bg); color: var(--warning-fg); }
+.file-badge--other { background: var(--border-soft); color: var(--text-muted); }

@@ -1,0 +1,50 @@
+/* ==========================================================================
+   MAAC — main stylesheet (entry point)
+   --------------------------------------------------------------------------
+   The CSS is split by responsibility (inspired by ITCSS):
+
+     base/        tokens, fonts, reset, typography, utilities   → no components here
+     layout/      app shell, sidebar, page containers
+     components/  reusable UI pieces (button, badge, card, composer ...)
+     pages/       styles that belong to a single page only
+
+   Order matters: from the most generic to the most specific.
+   Each page loads only this file; for production you can bundle the
+   @imports into one file with any bundler (esbuild, Vite, PostCSS ...).
+   ========================================================================== */
+
+/* 1) Base */
+@import url("./base/fonts.css");
+@import url("./base/tokens.css");
+@import url("./base/reset.css");
+@import url("./base/typography.css");
+@import url("./base/utilities.css");
+
+/* 2) Layout */
+@import url("./layout/app-shell.css");
+@import url("./layout/sidebar.css");
+@import url("./layout/page.css");
+
+/* 3) Components */
+@import url("./components/button.css");
+@import url("./components/form.css");
+@import url("./components/logo-mark.css");
+@import url("./components/otp.css");
+@import url("./components/badge.css");
+@import url("./components/card.css");
+@import url("./components/theme-toggle.css");
+@import url("./components/composer.css");
+@import url("./components/message.css");
+@import url("./components/data-table.css");
+@import url("./components/dropzone.css");
+@import url("./components/stat-card.css");
+@import url("./components/tabs.css");
+@import url("./components/toast.css");
+
+/* 4) Pages */
+@import url("./pages/auth.css");
+@import url("./pages/home.css");
+@import url("./pages/chat.css");
+@import url("./pages/upload.css");
+@import url("./pages/payment.css");
+@import url("./pages/subscriptions.css");
