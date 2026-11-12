@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light" data-auth="guest">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MAAC — تسجيل الدخول</title>
+  <meta name="description" content="سجّل دخولك لمساعد المحاسبة والمراجعة MAAC.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+
+  <!-- Applies the saved theme + the route guard before first paint (must stay a classic script) -->
+  <script src="assets/js/boot.js"></script>
+
+  <link rel="preload" href="assets/fonts/amiri-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body class="page-auth">
+  <div class="auth">
+
+    <!-- ===== Form side ===== -->
+    <main class="auth__main" id="main">
+      <header class="auth__top">
+        <a class="auth__mark" href="login.html" aria-label="MAAC">
+          <span class="logo-mark" aria-hidden="true"><span data-icon="trending-up" data-size="22"></span></span>
+          <span class="auth__mark-name">MAAC</span>
+        </a>
+        <div class="theme-row" data-theme-row></div>
+      </header>
+
+      <section class="auth__card" id="auth-card" aria-labelledby="auth-title">
+        <div class="logo-mark" aria-hidden="true"><span data-icon="trending-up" data-size="36" data-stroke="2.25"></span></div>
+
+        <h1 class="display auth__title" id="auth-title">تسجيل الدخول</h1>
+        <p class="lead auth__lead">أهلاً بيك تاني! سجّل دخولك عشان تكمّل شغلك على ملفاتك.</p>
+
+        <div class="notice auth__notice" id="page-notice" role="status" hidden>
+          <span data-notice-icon></span>
+          <span data-notice-text></span>
+        </div>
+
+        <form class="auth__form" id="login-form" novalidate>
+          <div class="notice notice--danger" data-form-error role="alert" hidden>
+            <span data-icon="circle-alert" data-size="18"></span>
+            <span data-error-text></span>
+          </div>
+          <div class="field">
+            <label class="field__label" for="email">البريد الإلكتروني</label>
+            <div class="input">
+              <span class="input__icon" data-icon="mail" data-size="20"></span>
+              <input class="input__control input__control--ltr" id="email" name="email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false"
+                     placeholder="name@company.com" aria-describedby="email-error">
+            </div>
+            <p class="field__error" id="email-error" role="alert" hidden>
+              <span data-icon="circle-alert" data-size="14"></span><span data-error-text></span>
+            </p>
+          </div>
+          <div class="field">
+            <div class="field__head">
+              <label class="field__label" for="password">كلمة المرور</label>
+              <a class="field__link" href="forgot.html">نسيت كلمة المرور؟</a>
+            </div>
+            <div class="input">
+              <span class="input__icon" data-icon="lock" data-size="20"></span>
+              <input class="input__control input__control--ltr" id="password" name="password" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false"
+                     placeholder="••••••••" aria-describedby="password-error caps-hint">
+              <button type="button" class="input__action" data-toggle-password aria-label="إظهار كلمة المرور" aria-pressed="false">
+                <span data-icon="eye" data-size="18"></span>
+              </button>
+            </div>
+            <p class="field__error" id="password-error" role="alert" hidden>
+              <span data-icon="circle-alert" data-size="14"></span><span data-error-text></span>
+            </p>
+            <p class="field__hint" id="caps-hint" hidden>
+              <span data-icon="info" data-size="14"></span><span>زرار Caps Lock شغّال</span>
+            </p>
+          </div>
+
+          <label class="check">
+            <input type="checkbox" name="remember" id="remember">
+            <span>تذكّرني على الجهاز ده</span>
+          </label>
+
+          <button class="btn btn--primary btn--lg btn--block" type="submit">
+            <span class="is-spinning" data-icon="loader-circle" data-size="18" data-spinner hidden></span>
+            <span data-label>دخول</span>
+          </button>
+        </form>
+
+        <p class="auth__alt">ما عندكش حساب؟ <a href="signup.html" id="signup-link">إنشاء حساب جديد</a></p>
+
+        <!-- Demo accounts — delete this block when a real back-end is connected -->
+        <div class="auth__demo" aria-label="حسابات تجريبية">
+          <div class="auth__demo-row">
+            <div>
+              <span class="auth__demo-title">حساب مستخدم (تجريبي)</span>
+              <span class="auth__demo-cred" id="demo-user-email"></span>
+              <span class="auth__demo-cred" id="demo-user-password"></span>
+            </div>
+            <button type="button" class="btn btn--outline btn--sm" data-fill-demo="user">استخدمه</button>
+          </div>
+          <div class="auth__demo-row">
+            <div>
+              <span class="auth__demo-title">حساب أدمن (تجريبي)</span>
+              <span class="auth__demo-cred" id="demo-admin-email"></span>
+              <span class="auth__demo-cred" id="demo-admin-password"></span>
+            </div>
+            <button type="button" class="btn btn--outline btn--sm" data-fill-demo="admin">استخدمه</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== Brand panel (decorative, hidden on small screens) — rendered by components/auth-brand.js ===== -->
+    <aside id="brand"></aside>
+
+  </div>
+
+  <script type="module" src="assets/js/pages/login.page.js"></script>
+</body>
+</html>
