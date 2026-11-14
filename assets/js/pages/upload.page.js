@@ -8,13 +8,30 @@ import { icon } from '../core/icons.js';
 import { bus } from '../core/event-bus.js';
 import { initAppShell } from '../components/app-shell.js';
 import { showToast } from '../components/toast.js';
-import { ACCEPTED_FILES, filesService } from '../services/files.service.js';
+import { useApi } from '../core/api.js';
+import { ACCEPTED_FILES, MAX_UPLOAD_MB, filesService } from '../services/files.service.js';
 
 const TYPE_LABELS = { pdf: 'PDF', word: 'Word', excel: 'Excel', image: 'صورة', other: 'ملف' };
 
 /* ------------------------------------------------------------------ views */
 
 function statusBadge(file) {
+  if (file.status === 'stored') {
+    return html`
+      <span class="badge badge--success">
+        ${raw(icon('check', { size: 16 }))}
+        <span>تم الرفع</span>
+      </span>
+    `;
+  }
+  if (file.status === 'uploading') {
+    return html`
+      <span class="badge badge--warning">
+        ${raw(icon('loader-circle', { size: 16, className: 'is-spinning' }))}
+        <span>جاري الرفع</span>
+      </span>
+    `;
+  }
   if (file.status === 'indexed') {
     return html`
       <span class="badge badge--success">
@@ -36,20 +53,32 @@ const fileRow = (file) => html`
     <td><span class="file-badge file-badge--${file.type}">${TYPE_LABELS[file.type]}</span></td>
     <td class="files-table__name"><bdi dir="ltr">${file.name}</bdi></td>
     <td>${statusBadge(file)}</td>
+    <td>${useApi && file.status !== 'uploading' ? deleteButton(file) : ''}</td>
   </tr>
 `;
 
+const deleteButton = (file) => html`
+  <button type="button" class="icon-btn icon-btn--outline" data-delete="${file.id}" aria-label="مسح الملف ${file.name}" title="مسح الملف">
+    ${raw(icon('trash-2', { size: 18 }))}
+  </button>
+`;
+
 const emptyRow = html`
-  <tr><td colspan="3" class="data-table__empty">لسه مفيش ملفات — اسحب ملفاتك فوق أو اختارها من جهازك.</td></tr>
+  <tr><td colspan="4" class="data-table__empty">لسه مفيش ملفات — اسحب ملفاتك فوق أو اختارها من جهازك.</td></tr>
+`;
+
+const loadingRow = html`
+  <tr><td colspan="4" class="data-table__empty">جاري تحميل الملفات…</td></tr>
 `;
 
 /* --------------------------------------------------------------- behaviour */
 
 function handleFiles(files) {
   if (!files.length) return;
-  const { added, rejected } = filesService.addFiles(files);
-  if (added.length) showToast(`اتضاف ${added.length} ملف وبيتفهرس دلوقتي`);
-  if (rejected.length) showToast('نوع الملف مش مدعوم', { iconName: 'circle-alert' });
+  const { added, rejected, tooLarge } = filesService.addFiles(files);
+  if (added.length) showToast(useApi ? `بنرفع ${added.length} ملف…` : `اتضاف ${added.length} ملف وبيتفهرس دلوقتي`);
+  if (rejected.length) showToast('نوع الملف مش مدعوم. المسموح: PDF، Word (docx)، Excel (xlsx)، CSV، وصور.', { iconName: 'circle-alert' });
+  if (tooLarge.length) showToast(`الملف أكبر من ${MAX_UPLOAD_MB} ميجا`, { iconName: 'circle-alert' });
 }
 
 function setupDropzone() {
@@ -87,10 +116,15 @@ onReady(() => {
   const body = qs('#files-body');
   const render = () => {
     const files = filesService.list();
-    mount(body, files.length ? files.map(fileRow) : emptyRow);
+    mount(body, files.length ? files.map(fileRow) : filesService.loading() ? loadingRow : emptyRow);
   };
   render();
   bus.on('files:changed', render);
+
+  body.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-delete]');
+    if (button) filesService.remove(button.dataset.delete);
+  });
 
   setupDropzone();
 });

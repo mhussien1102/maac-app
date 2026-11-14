@@ -78,7 +78,13 @@ onReady(async () => {
   const renderStats = () => mount(qs('#stats'), STATS.map((stat) => statCard(stat, snapshot.summary)));
 
   const refresh = async () => {
-    snapshot = await subscriptionsService.snapshot();
+    try {
+      snapshot = await subscriptionsService.snapshot();
+    } catch (error) {
+      // real back-end only: server down / not allowed → say so instead of leaving an empty table
+      mount(bodyEl, html`<tr><td class="data-table__empty" colspan="5">${error.message || 'مقدرتش أحمّل الاشتراكات، جرّب تاني.'}</td></tr>`);
+      return;
+    }
     renderStats();
     renderRows();
   };

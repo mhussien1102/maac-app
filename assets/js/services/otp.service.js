@@ -1,10 +1,11 @@
 /**
  * OTP service — the 6-digit code sent to the user's e-mail.
  *
- * ⚠️ MOCK: no e-mail is sent. The code is generated here, kept in sessionStorage
- * and shown in the "كود تجريبي" box on the verification page. With a real
- * back-end: `issue()` asks the server to e-mail the code, `verify()` sends the
- * typed code back, and nothing secret lives in the browser.
+ * "mock" mode: no e-mail is sent. The code is generated here, kept in sessionStorage
+ *   and shown in the "كود تجريبي" box on the verification page.
+ * "api" mode (core/api.js): the SERVER generates, e-mails and checks the code — the browser
+ *   keeps only "who is waiting for a code". In development the server also returns the code
+ *   (`devCode`) so the demo box can show it; in production it never does.
  *
  * Purposes: "signup" (confirm the e-mail of a new account) · "reset" (forgot password)
  */
@@ -12,6 +13,7 @@
 import { sessionStore } from '../core/storage.js';
 import { wait } from '../core/dom.js';
 import { accountsService } from './accounts.service.js';
+import { api, useApi } from '../core/api.js';
 
 const KEY = 'otp';
 export const OTP_LENGTH = 6;
@@ -34,7 +36,7 @@ function randomCode() {
 
 const read = () => sessionStore.get(KEY);
 
-export const otpService = {
+const mockOtp = {
   /**
    * "Sends" a code. For the "reset" purpose an unknown e-mail gets no code but the
    * exact same response, so the screen never reveals which e-mails are registered.
@@ -112,3 +114,51 @@ export const otpService = {
     sessionStore.remove(KEY);
   },
 };
+
+/* ---- Real back-end: POST /auth/resend-otp · /auth/forgot-password · /auth/verify-otp ---------------- */
+
+const savePending = (email, purpose, devCode) => {
+  const now = Date.now();
+  sessionStore.set(KEY, { email, purpose, code: devCode ?? null, sentAt: now, expiresAt: now + TTL_MS, attempts: 0 });
+};
+
+const remoteOtp = {
+  /** The server has just e-mailed a code (sign-up) → remember who is waiting for it. */
+  startPending(email, purpose, devCode) {
+    savePending(String(email).trim().toLowerCase(), purpose, devCode);
+    return this.pending();
+  },
+
+  async issue(email, purpose) {
+    const address = String(email).trim().toLowerCase();
+    let devCode = null;
+    try {
+      const answer = purpose === 'signup'
+        ? await api.post('/auth/resend-otp', { email: address, purpose })
+        : await api.post('/auth/forgot-password', { email: address });   // same answer whether or not the e-mail exists
+      // The server never says "too soon / too many" (that would reveal the e-mail exists) → no devCode in the
+      // answer can mean "throttled": the code we already have is then still the valid one (development only).
+      const previous = read();
+      devCode = answer.devCode ?? (previous?.email === address && previous.purpose === purpose ? previous.code : null);
+    } catch (error) {
+      if (error.code !== 'too_soon') throw error;
+      // asked again within 30 s → the code we already sent is still the valid one
+      const previous = read();
+      devCode = previous?.email === address && previous.purpose === purpose ? previous.code : null;
+    }
+    savePending(address, purpose, devCode);
+    return this.pending();
+  },
+
+  /** @returns {Promise<{ email, purpose, user?, expiresAt?, resetToken? }>} */
+  async verify(input) {
+    const state = read();
+    if (!state) throw new OtpError('no_pending', 'الجلسة انتهت، ابدأ من الأول');
+    // wrong code → 400 invalid · 400 expired · 429 locked  (counted and enforced by the server)
+    const answer = await api.post('/auth/verify-otp', { email: state.email, code: String(input), purpose: state.purpose });
+    sessionStore.remove(KEY);
+    return { email: state.email, purpose: state.purpose, ...answer };
+  },
+};
+
+export const otpService = useApi ? { ...mockOtp, ...remoteOtp } : mockOtp;

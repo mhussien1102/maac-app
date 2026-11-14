@@ -18,6 +18,7 @@ import { normalizePhone } from '../core/validators.js';
 import { onlyDigits } from '../core/format.js';
 import { DEMO_USER } from '../data/users.seed.js';
 import { adminsService } from './admins.service.js';
+import { api, useApi } from '../core/api.js';
 
 const KEY = 'accounts';
 
@@ -96,7 +97,7 @@ export function toProfile(account) {
 
 /* ---- API ---------------------------------------------------------------- */
 
-export const accountsService = {
+const mockAccounts = {
   /** All accounts (without hashes) — used by the admin subscriptions page. */
   async listAll() {
     const accounts = await load();
@@ -188,3 +189,46 @@ export const accountsService = {
     return toProfile(account);
   },
 };
+
+/* ---- Real back-end ------------------------------------------------------------------------------
+ * Accounts live on the server: sign-up / sign-in / OTP never touch this file in "api" mode (see
+ * auth.service.js). Only two readers remain:
+ *   · the admin subscriptions page  → GET /api/admin/users   (admin-only, enforced by the server)
+ *   · the payment page              → GET /api/auth/me
+ * ⚠️ Plans / payments / subscriptions are the NEXT back-end milestone, so for now they are still
+ *    kept per browser (localStorage "billing") and merged into the profiles below.
+ */
+
+const BILLING_KEY = 'billing';
+const EMPTY_BILLING = { subscription: null, payments: [] };
+
+const readBilling = () => storage.get(BILLING_KEY) ?? {};
+const withBilling = (user) => ({
+  ...user,
+  createdAt: Date.parse(user.createdAt) || Date.now(),
+  ...(readBilling()[user.id] ?? EMPTY_BILLING),
+});
+
+const remoteAccounts = {
+  async listAll() {
+    const { users } = await api.get('/admin/users');
+    return users.filter((user) => user.role !== 'admin').map(withBilling);
+  },
+
+  reload() {},
+
+  async getById(id) {
+    const { user } = await api.get('/auth/me');
+    return user.id === id ? withBilling(user) : null;
+  },
+
+  async recordPayment(id, { subscription, payment }) {
+    const all = readBilling();
+    const current = all[id] ?? EMPTY_BILLING;
+    all[id] = { subscription, payments: [payment, ...(current.payments ?? [])] };
+    storage.set(BILLING_KEY, all);
+    return this.getById(id);
+  },
+};
+
+export const accountsService = useApi ? { ...mockAccounts, ...remoteAccounts } : mockAccounts;

@@ -68,7 +68,19 @@
     location.replace(new URL(path, new URL(rootUrl, location.href)).href);
   }
 
+  // The server adds ?bounced=1 when IT turned this visit away (an admin page without an admin session). The saved
+  // session hint is then known to be wrong, so it must not send us straight back (that would loop): it is dropped
+  // on the login page, and ignored on the page of the other area, where the module re-checks the real session.
+  var bounced = /[?&]bounced=1(?:&|$)/.test(location.search);
+
+  function forgetSession() {
+    ['localStorage', 'sessionStorage'].forEach(function (store) {
+      try { window[store].removeItem(SESSION_KEY); } catch (e) { /* blocked */ }
+    });
+  }
+
   if (authMode) {
+    if (bounced && authMode === 'guest') forgetSession();
     var session = readSession();
     var valid = session.state === 'valid';
 
@@ -77,7 +89,7 @@
         var relative = location.pathname.indexOf(rootPath) === 0 ? location.pathname.slice(rootPath.length) : location.pathname.split('/').pop();
         var page = (relative || 'index.html') + location.search;
         redirect('login.html?' + (session.state === 'expired' ? 'reason=expired&' : '') + 'next=' + encodeURIComponent(page));
-      } else if (area && session.role !== area) {
+      } else if (area && session.role !== area && !bounced) {
         redirect(HOMES[session.role]);          // signed in, but this page belongs to the other role
       }
     } else if (authMode === 'guest' && valid) {

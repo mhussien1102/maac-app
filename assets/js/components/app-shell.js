@@ -4,10 +4,12 @@
  */
 
 import { qs } from '../core/dom.js';
+import { bus } from '../core/event-bus.js';
 import { icon } from '../core/icons.js';
 import { currentArea } from '../core/routes.js';
 import { authService } from '../services/auth.service.js';
 import { mountSidebar } from './sidebar.js';
+import { showToast } from './toast.js';
 
 export function initAppShell({ active = null, conversationId = null } = {}) {
   // Every app page is protected: without a session we are already being sent to login.html,
@@ -19,6 +21,9 @@ export function initAppShell({ active = null, conversationId = null } = {}) {
   const sidebar = qs('#sidebar', shell);
 
   mountSidebar(sidebar, { active, conversationId, user });
+
+  // An upload that the server refused (wrong type, infected, too big...) is reported on whatever page the person is on.
+  bus.on('files:error', ({ name, message }) => showToast(name ? `${name}: ${message}` : message, { iconName: 'circle-alert', duration: 6000 }));
   setupMobileDrawer(shell, sidebar);
 
   // Lets assets/js/boot.js know the modules loaded (see the file:// hint).

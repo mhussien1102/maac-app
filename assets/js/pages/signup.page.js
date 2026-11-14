@@ -44,6 +44,13 @@ onReady(() => {
         f.focus('email');
         return true;
       }
+      // The server re-checks every field (and rejects very common passwords) → show its message under the field.
+      const [name, messages] = Object.entries(error.fields ?? {})[0] ?? [];
+      if (name && f.input(name)) {
+        f.setError(name, Array.isArray(messages) ? messages[0] : String(messages));
+        f.focus(name);
+        return true;
+      }
       return false;
     },
   });

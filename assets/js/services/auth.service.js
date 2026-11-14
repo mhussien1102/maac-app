@@ -1,9 +1,11 @@
 /**
  * Auth service — login (admin OR user), sign-up, password reset and the current session.
  *
- * ⚠️ MOCK: it sits on top of the mock accounts / otp services. To connect a real
- * back-end, replace the bodies with API calls (see the examples in each method)
- * and prefer an HTTP-only cookie for the real session token.
+ * Two modes (chosen automatically by core/api.js):
+ *   "api"  → the real back-end (maac-api): the server owns the accounts and the role, and the real
+ *            session is an HttpOnly cookie. `maac:session` below is only a UI hint for the instant
+ *            redirect guard — it grants nothing (every API call is checked by the server).
+ *   "mock" → browser-only demo on top of the mock accounts / otp services (GitHub Pages, no server).
  *
  * One login for the whole site. The e-mail decides where you land:
  *   an e-mail from data/users.seed.js → ADMIN_USERS  → role "admin" → /admin/…
@@ -24,6 +26,9 @@ import { currentPage, homeFor, loginUrl, replace } from '../core/routes.js';
 import { accountsService, toProfile } from './accounts.service.js';
 import { adminsService } from './admins.service.js';
 import { otpService } from './otp.service.js';
+import { api, useApi } from '../core/api.js';
+import { normalizePhone } from '../core/validators.js';
+import { onlyDigits } from '../core/format.js';
 
 const KEY = 'session';
 const RESET_KEY = 'reset-grant';
@@ -90,13 +95,14 @@ function watchOtherTabs() {
   });
 }
 
-export const authService = {
+const mockAuth = {
   /* ---------------------------------------------------------------- session */
 
   /** The active session, or null (an expired session is removed on the way). */
   getSession() {
     const session = readStored();
-    if (isValid(session)) return session;
+    // A hint written in the other mode (e.g. demo session, server now running) is useless → drop it.
+    if (isValid(session) && Boolean(session.api) === useApi) return session;
     if (session) clearStored();
     return null;
   },
@@ -222,3 +228,124 @@ export const authService = {
     return account ? toProfile(account) : null;
   },
 };
+
+/* ====================================================================================
+ * Real back-end — these methods replace the mock ones when /api/health answers.
+ * Endpoints: POST /auth/{login,register,verify-otp,forgot-password,reset-password,logout} · GET /auth/me
+ * ==================================================================================== */
+
+const sessionUserFromApi = (user) => ({
+  id: user.id,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  name: user.name || `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
+  email: user.email,
+  role: user.role === 'admin' ? 'admin' : 'user',   // decided by the server
+  title: user.title ?? '',
+  company: user.company ?? '',
+});
+
+/** Stores the UI hint (the cookie itself is set by the server and is invisible to JavaScript). */
+function openApiSession(user, expiresAt, remember) {
+  const now = Date.now();
+  const session = {
+    user: sessionUserFromApi(user),
+    createdAt: now,
+    expiresAt: Date.parse(expiresAt) || now + (remember ? REMEMBER_TTL : SESSION_TTL),
+    remember,
+    api: true,
+  };
+  clearStored();
+  (remember ? storage : sessionStore).set(KEY, session);
+  bus.emit('auth:changed', { user: session.user });
+  return session;
+}
+
+const remoteAuth = {
+  async login({ email, password, remember = false }) {
+    // 404 no_account · 401 invalid_credentials · 403 not_verified — the login page switches on `error.code`
+    const { user, expiresAt } = await api.post('/auth/login', { email, password, remember });
+    return openApiSession(user, expiresAt, remember);
+  },
+
+  async register(profile) {
+    const { confirmPassword: _confirm, ...values } = profile;
+    const data = await api.post('/auth/register', {
+      ...values,
+      phone: normalizePhone(values.phone),
+      taxId: onlyDigits(values.taxId),
+    });   // 409 email_taken
+    otpService.startPending(data.email, 'signup', data.devCode);
+    return { email: data.email };
+  },
+
+  async verifyOtp(code) {
+    const result = await otpService.verify(code);
+    if (result.purpose === 'signup') {
+      openApiSession(result.user, result.expiresAt, false);   // the server already set the cookie
+      return { purpose: result.purpose, email: result.email };
+    }
+    sessionStore.set(RESET_KEY, { email: result.email, resetToken: result.resetToken, expiresAt: Date.now() + RESET_TTL });
+    return { purpose: result.purpose, email: result.email };
+  },
+
+  async resetPassword(newPassword) {
+    const grant = sessionStore.get(RESET_KEY);
+    if (!grant?.resetToken || grant.expiresAt <= Date.now()) {
+      throw new AuthError('reset_expired', 'انتهت مهلة تغيير كلمة المرور، ابدأ من الأول');
+    }
+    await api.post('/auth/reset-password', { resetToken: grant.resetToken, password: newPassword });
+    sessionStore.remove(RESET_KEY);
+    clearStored();
+  },
+
+  /** Clears the hint at once, then asks the server to drop the cookie. */
+  async logout() {
+    clearStored();
+    bus.emit('auth:changed', { user: null });
+    try {
+      await api.post('/auth/logout');
+    } catch {
+      /* offline → the hint is gone; the cookie dies with its own expiry */
+    }
+  },
+
+  /** Asks the server who we really are (role + profile) and corrects the hint if it drifted. */
+  async refresh() {
+    try {
+      const { user } = await api.get('/auth/me');
+      const session = readStored();
+      if (!session?.api) return;
+      const next = sessionUserFromApi(user);
+      const roleChanged = next.role !== session.user.role;
+      (session.remember ? storage : sessionStore).set(KEY, { ...session, user: next });
+      if (roleChanged) replace(homeFor(next.role));
+    } catch {
+      /* 401 → the 'auth:expired' handler below redirects; a network error is ignored (the next call will tell) */
+    }
+  },
+
+  requireAuth(area) {
+    // ?bounced=1 → the SERVER just refused this visit although the saved hint claimed another role (e.g. an admin who
+    // was demoted). Don't trust the hint (and don't bounce back, which would loop): ask the server and follow its answer.
+    if (new URLSearchParams(location.search).get('bounced') === '1') {
+      const hinted = this.getUser();
+      if (hinted && area && hinted.role !== area) {
+        this.refresh();
+        return null;
+      }
+    }
+    const user = mockAuth.requireAuth.call(this, area);
+    if (user) this.refresh();   // the hint is only a hint: confirm with the server in the background
+    return user;
+  },
+};
+
+if (useApi) {
+  bus.on('auth:expired', () => {
+    clearStored();
+    if (document.documentElement.getAttribute('data-auth') === 'required') replace(loginUrl({ reason: 'expired' }));
+  });
+}
+
+export const authService = useApi ? { ...mockAuth, ...remoteAuth } : mockAuth;

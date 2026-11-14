@@ -14,7 +14,8 @@
 
 import { html, mount, raw } from '../core/html.js';
 import { icon } from '../core/icons.js';
-import { ACCEPTED_FILES, filesService } from '../services/files.service.js';
+import { useApi } from '../core/api.js';
+import { ACCEPTED_FILES, MAX_UPLOAD_MB, filesService } from '../services/files.service.js';
 import { showToast } from './toast.js';
 
 let instanceCount = 0;
@@ -75,9 +76,10 @@ export function mountComposer(container, { placeholder = 'اكتب رسالتك.
 
   container.querySelector('[data-action="attach"]').addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', () => {
-    const { added, rejected } = filesService.addFiles([...fileInput.files]);
-    if (added.length) showToast(`اتضاف ${added.length} ملف للداتا سيت وهيتفهرس دلوقتي`);
-    if (rejected.length) showToast('نوع الملف مش مدعوم', { iconName: 'circle-alert' });
+    const { added, rejected, tooLarge } = filesService.addFiles([...fileInput.files]);
+    if (added.length) showToast(useApi ? `بنرفع ${added.length} ملف للداتا سيت…` : `اتضاف ${added.length} ملف للداتا سيت وهيتفهرس دلوقتي`);
+    if (rejected.length) showToast('نوع الملف مش مدعوم. المسموح: PDF، Word (docx)، Excel (xlsx)، CSV، وصور.', { iconName: 'circle-alert' });
+    if (tooLarge.length) showToast(`الملف أكبر من ${MAX_UPLOAD_MB} ميجا`, { iconName: 'circle-alert' });
     fileInput.value = '';
   });
 

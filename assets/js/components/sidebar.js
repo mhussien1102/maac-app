@@ -99,8 +99,8 @@ export function mountSidebar(container, { active = null, conversationId = null, 
 
   mountThemeRow(container.querySelector('[data-theme-row]'));
 
-  container.querySelector('[data-logout]').addEventListener('click', () => {
-    authService.logout();
+  container.querySelector('[data-logout]').addEventListener('click', async () => {
+    await authService.logout();   // (with the real back-end this also asks the server to drop the cookie)
     replace(loginUrl({ reason: 'logout' }));
   });
 

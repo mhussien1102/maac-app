@@ -157,7 +157,8 @@ onReady(async () => {
 
   /* ---- status + history (read from the account) ---- */
   const renderAccount = async () => {
-    const account = await authService.getAccount();
+    // (with the real back-end this is a network call → a failure must not break the page)
+    const account = await authService.getAccount().catch(() => null);
     mount(qs('#status'), statusView(account?.subscription));
 
     const payments = account?.payments ?? [];

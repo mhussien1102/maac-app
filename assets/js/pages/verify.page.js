@@ -10,6 +10,7 @@
 import { onReady, qs, wait } from '../core/dom.js';
 import { formatCountdown, maskEmail } from '../core/format.js';
 import { homeFor, replace, routes } from '../core/routes.js';
+import { useApi } from '../core/api.js';
 import { authService } from '../services/auth.service.js';
 import { OTP_LENGTH, otpService } from '../services/otp.service.js';
 import { initAuthLayout } from '../components/auth-layout.js';
@@ -43,6 +44,16 @@ onReady(() => {
     qs('#back-label').textContent = 'تعديل الإيميل';
   }
 
+  // With a real server the answer is the same whether or not the e-mail has an account (so nobody can use
+  // this page to find out who is registered) → say that, plainly.
+  if (useApi) {
+    const note = qs('#verify-note');
+    note.textContent = pending.purpose === 'reset'
+      ? 'لو فيه حساب بالإيميل ده هيوصله كود لتغيير كلمة المرور.'
+      : 'لو الإيميل ده جديد هيوصلك كود. ولو عندك حساب بالفعل هيوصلك إيميل بكده.';
+    note.hidden = false;
+  }
+
   /* ---- helpers ---- */
   const setError = (message) => {
     qs('[data-error-text]', error).textContent = message;
@@ -61,6 +72,8 @@ onReady(() => {
     const code = otpService.peekDemoCode();
     qs('#demo-code').textContent = code ?? (pending.purpose === 'reset' ? 'مفيش حساب بالإيميل ده (للتجربة بس)' : '—');
     qs('#fill-code').hidden = !code;
+    // Real server in production: it never returns the code, so there is nothing to show.
+    if (useApi) qs('.auth__demo').hidden = !code;
   };
 
   /* ---- resend countdown ---- */

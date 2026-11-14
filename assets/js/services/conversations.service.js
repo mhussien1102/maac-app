@@ -16,7 +16,9 @@ let cacheKey = null;
 
 const keyFor = (user) => `conversations:${user?.id ?? 'guest'}`;
 // Sample conversations for the two demo accounts (admin + demo user); every other person starts empty.
-const hasSamples = (user) => user?.id === DEMO_USER.id || ADMIN_USERS.some((admin) => admin.id === user?.id);
+const hasSamples = (user) =>
+  user?.id === DEMO_USER.id || user?.email === DEMO_USER.email
+  || ADMIN_USERS.some((admin) => admin.id === user?.id || admin.email === user?.email);
 const seedFor = (user) => (hasSamples(user) ? SEED_CONVERSATIONS : []);
 
 function load() {
